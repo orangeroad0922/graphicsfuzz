@@ -56,15 +56,13 @@ public class LiveOutputVariableWriteReductionOpportunities
   }
 
   @Override
-  protected void visitChildOfBlock(BlockStmt block, Stmt child) {
-    if (!(child instanceof BlockStmt)) {
-      return;
-    }
-    final Optional<String> backupName = containsOutVariableBackup((BlockStmt) child);
+  public void visitBlockStmt(BlockStmt block) {
+    super.visitBlockStmt(block);
+    final Optional<String> backupName = containsOutVariableBackup(block);
     if (backupName.isPresent()) {
-      addOpportunity(new LiveOutputVariableWriteReductionOpportunity((BlockStmt) child,
-            backupName.get(),
-            getVistitationDepth()));
+      addOpportunity(new LiveOutputVariableWriteReductionOpportunity(block,
+          backupName.get(),
+          getVistitationDepth()));
     }
   }
 
